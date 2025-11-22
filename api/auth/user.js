@@ -8,7 +8,7 @@ export default function handler(req, res) {
 
   try {
     const payload = jwt.verify(token, SESSION_SECRET);
-    res.json({ user: payload });
+    res.json({ user: payload }); // now includes name, email, uid
   } catch {
     res.json({ user: null });
   }

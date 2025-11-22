@@ -1,7 +1,7 @@
 <template>
   <div class="dashboard-container">
     <h1>Student Dashboard</h1>
-    <p>Welcome, `{{ user?.name}}  {{user?.email }}`</p>
+    <p>Welcome, {{ user?.name}}  {{user?.email }}</p>
     <button @click="logout">Logout</button>
   </div>
 </template>
