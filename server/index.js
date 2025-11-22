@@ -15,7 +15,7 @@ const app = express();
 app.use(express.json());
 app.use(cookieParser());
 app.use(cors({
-  origin: "http://localhost:5173",
+  origin: process.env.FRONTEND_URL, // https://myauthtestbymikefrost.vercel.app
   credentials: true
 }));
 
@@ -23,10 +23,14 @@ app.use(cors({
 // Session
 // ----------------------
 app.use(session({
-  secret: process.env.SESSION_SECRET || "keyboard cat",
+  secret: process.env.SESSION_SECRET,
   resave: false,
   saveUninitialized: false,
-  cookie: { secure: false } // for dev
+  cookie: {
+    secure: true,          // HTTPS required in prod
+    httpOnly: true,
+    sameSite: "none"       // needed for cross-domain cookies
+  }
 }));
 
 app.use(passport.initialize());
@@ -38,10 +42,9 @@ app.use(passport.session());
 passport.use(new GoogleStrategy({
   clientID: process.env.GOOGLE_CLIENT_ID,
   clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-  callbackURL: "http://localhost:4000/auth/google/callback"
+  callbackURL: `${process.env.BACKEND_URL}/auth/google/callback`
 }, (accessToken, refreshToken, profile, done) => {
-  // profile contains user's email
-  done(null, profile);
+  done(null, profile); // profile contains email, name, etc.
 }));
 
 passport.serializeUser((user, done) => done(null, user));
@@ -50,15 +53,12 @@ passport.deserializeUser((user, done) => done(null, user));
 // ----------------------
 // Auth Routes
 // ----------------------
-
-// Login
 app.get("/auth/google",
   passport.authenticate("google", { scope: ["profile", "email"] })
 );
 
-// Google OAuth callback
 app.get("/auth/google/callback",
-  passport.authenticate("google", { failureRedirect: "http://localhost:5173/login" }),
+  passport.authenticate("google", { failureRedirect: `${process.env.FRONTEND_URL}/?error=not_verified` }),
   (req, res) => {
     const email = req.user.emails[0].value;
     const domain = email.split("@")[1];
@@ -73,18 +73,16 @@ app.get("/auth/google/callback",
     if (!isVerified) {
       req.logout(() => {
         req.session.destroy(() => {
-          return res.redirect("http://localhost:5173/?error=not_verified");
+          return res.redirect(`${process.env.FRONTEND_URL}/?error=not_verified`);
         });
       });
       return;
     }
 
-    // Verified student
-    res.redirect("http://localhost:5173/dashboard");
+    // Verified student → dashboard
+    res.redirect(`${process.env.FRONTEND_URL}/dashboard`);
   }
 );
-
-
 
 // Get current logged user
 app.get("/auth/user", (req, res) => {
@@ -95,10 +93,10 @@ app.get("/auth/user", (req, res) => {
 app.get("/auth/logout", (req, res) => {
   req.logout(() => {
     req.session.destroy();
-    res.clearCookie("connect.sid");
+    res.clearCookie("connect.sid", { secure: true, sameSite: "none" });
     res.sendStatus(200);
   });
 });
 
 // ----------------------
-app.listen(4000, () => console.log("Server running on 4000"));
+app.listen(process.env.PORT || 4000, () => console.log("Server running"));

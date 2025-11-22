@@ -5,10 +5,6 @@ import Dashboard from "../views/Dashboard.vue";
 
 const routes = [
   { path: "/", name: "Home", component: Home },
-
-  // 🔥 THIS FIX ENSURES /home never loads
-  { path: "/home", redirect: "/" },
-
   { path: "/login", name: "Login", component: Login },
   { path: "/dashboard", name: "Dashboard", component: Dashboard }
 ];
@@ -20,19 +16,18 @@ const router = createRouter({
 
 // Protect dashboard only
 router.beforeEach(async (to, from, next) => {
-  if (to.path !== "/dashboard") return next();
+  const protectedPages = ["/dashboard"];
+  if (!protectedPages.includes(to.path)) return next();
 
   try {
-    const res = await fetch("http://localhost:4000/auth/user", {
+    const res = await fetch(`${import.meta.env.VITE_API_URL}/auth/user`, {
       credentials: "include"
     });
-
     const data = await res.json();
-
-    if (data.user) next();      // verified
-    else next("/login");        // no session
+    if (data.user) next();
+    else next("/");
   } catch {
-    next("/login");
+    next("/");
   }
 });
 
