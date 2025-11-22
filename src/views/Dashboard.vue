@@ -27,11 +27,22 @@ onMounted(async () => {
 });
 
 async function logout() {
-  await fetch(`${import.meta.env.VITE_API_URL}/auth/logout`, {
-    credentials: "include"
-  });
-  router.push("/");
+  try {
+    // Call serverless logout to clear cookie
+    await fetch(`${import.meta.env.VITE_API_URL}/auth/logout`, {
+      credentials: "include"
+    });
+
+    // Reset local state
+    user.value = null;
+
+    // Redirect to home
+    router.push("/");
+  } catch (err) {
+    console.error(err);
+  }
 }
+
 </script>
 
 <style scoped>
