@@ -1,10 +1,11 @@
+// api/auth/googleCallback.js
 import { google } from "googleapis";
 import jwt from "jsonwebtoken";
 
 const CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
 const CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
 const REDIRECT_URI = process.env.REDIRECT_URI; // e.g., https://myauthtestbymikefrost.vercel.app/api/auth/googleCallback
-const FRONTEND_URL = process.env.VITE_FRONTEND_URL; // e.g., https://myauthtestbymikefrost.vercel.app
+const FRONTEND_URL = process.env.VITE_FRONTEND_URL || "https://myauthtestbymikefrost.vercel.app";
 
 const oauth2Client = new google.auth.OAuth2(
   CLIENT_ID,
@@ -37,20 +38,24 @@ export default async function handler(req, res) {
       allowedDomains.includes(emailDomain) || profile.email === allowedSingleEmail;
 
     if (!isVerified) {
+      // Non-student: redirect to home with error
       return res.redirect(`${FRONTEND_URL}/?error=not_verified`);
     }
 
-    // Create session token
+    // Create JWT token for session
     const token = jwt.sign(
       { uid: profile.id, email: profile.email },
       process.env.SESSION_SECRET,
       { expiresIn: "7d" }
     );
 
-    // Set cookie for frontend
-    res.setHeader("Set-Cookie", `token=${token}; HttpOnly; Path=/; Max-Age=604800; Secure; SameSite=Lax`);
+    // Set cookie
+    res.setHeader(
+      "Set-Cookie",
+      `token=${token}; HttpOnly; Path=/; Max-Age=604800; Secure; SameSite=Lax`
+    );
 
-    // Redirect verified user to dashboard
+    // Verified student: redirect to dashboard
     return res.redirect(`${FRONTEND_URL}/dashboard`);
   } catch (err) {
     console.error(err);
