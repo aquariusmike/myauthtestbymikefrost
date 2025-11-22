@@ -1,7 +1,7 @@
 <template>
   <div class="dashboard-container">
     <h1>Student Dashboard</h1>
-    <p>Welcome, {{ user?.displayName || user?.emails[0].value }}</p>
+    <p>Welcome, {{ user?.name || user?.email }}</p>
     <button @click="logout">Logout</button>
   </div>
 </template>
@@ -40,8 +40,7 @@ async function logout() {
   margin-top: 100px;
   padding: 30px;
   max-width: 500px;
-  margin-left: auto;
-  margin-right: auto;
+  margin: auto;
   border-radius: 10px;
   box-shadow: 0 8px 20px rgba(0,0,0,0.15);
   background: #fff;

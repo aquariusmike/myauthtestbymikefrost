@@ -39,8 +39,7 @@ onMounted(async () => {
   margin-top: 100px;
   padding: 30px;
   max-width: 500px;
-  margin-left: auto;
-  margin-right: auto;
+  margin: auto;
   border-radius: 10px;
   box-shadow: 0 8px 20px rgba(0,0,0,0.15);
   background: #fff;
@@ -55,11 +54,6 @@ button {
   margin-top: 20px;
 }
 button:hover { opacity: 0.9; }
-.error {
-  color: red;
-  margin-bottom: 20px;
-}
-.dashboard-redirect {
-  margin-top: 20px;
-}
+.error { color: red; margin-bottom: 20px; }
+.dashboard-redirect { margin-top: 20px; }
 </style>
