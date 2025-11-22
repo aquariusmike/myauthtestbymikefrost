@@ -1,14 +1,15 @@
 import jwt from "jsonwebtoken";
 
-export default function handler(req, res) {
-  const cookie = req.headers.cookie?.split("; ").find(c => c.startsWith("appToken="));
-  if (!cookie) return res.json({ user: null });
+const SESSION_SECRET = process.env.SESSION_SECRET;
 
-  const token = cookie.split("=")[1];
+export default function handler(req, res) {
+  const token = req.cookies?.token;
+  if (!token) return res.json({ user: null });
+
   try {
-    const payload = jwt.verify(token, process.env.SESSION_SECRET);
-    return res.json({ user: payload });
+    const payload = jwt.verify(token, SESSION_SECRET);
+    res.json({ user: payload });
   } catch {
-    return res.json({ user: null });
+    res.json({ user: null });
   }
 }
