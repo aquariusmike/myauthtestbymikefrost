@@ -28,13 +28,15 @@ export default async function handler(req, res) {
     const oauth2 = google.oauth2({ version: "v2", auth: oauth2Client });
     const { data: profile } = await oauth2.userinfo.get();
 
-    // Verify allowed emails/domains
+    const email = req.user.emails[0].value;
+    const domain = email.split("@")[1];
+
     const allowedDomains = ["stu.pathfinder-mm.org"];
-    const allowedSingleEmail = "avagarimike11@gmail.com";
-    const emailDomain = profile.email.split("@")[1];
+    const allowedSingleEmail = ["avagarimike11@gmail.com", "minnyi158@gmail.com"];
 
     const isVerified =
-      allowedDomains.includes(emailDomain) || profile.email === allowedSingleEmail;
+      allowedDomains.includes(domain) ||
+      allowedSingleEmail.includes(email);
 
     if (!isVerified) {
       return res.redirect(`${FRONTEND_URL}/?error=not_verified`);
