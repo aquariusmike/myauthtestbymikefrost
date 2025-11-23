@@ -1,4 +1,5 @@
 <template>
+  <section class="main">
   <div class="home-container">
     <h1>Welcome to Pathfinder Portal</h1>
 
@@ -16,6 +17,7 @@
     </div>
     
   </div>
+  </section>
 </template>
 
 <script setup>
@@ -39,6 +41,13 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+.main {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  width: 100%;
 }
 .home-container {
   text-align: center;
