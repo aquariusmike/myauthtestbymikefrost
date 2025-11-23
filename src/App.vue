@@ -8,7 +8,9 @@ const callback = (response) => {
 
 
 <template>
+  <section class="main">
   <router-view />
+  </section>
   <footer>
     <div style="text-align: center; padding: 20px; color: #888; display: block; position: fixed; bottom: 0; width: 100%; background: #f9f9f9;">
       <p>2025 MyAuth Test. Made by Mike Frost</p>
@@ -20,5 +22,9 @@ const callback = (response) => {
 body {
   margin: 0;
   font-family: Arial, sans-serif;
+}
+main {
+  min-height: 100vh;
+  padding-bottom: 60px; /* Height of the footer */
 }
 </style>
