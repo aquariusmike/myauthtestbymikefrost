@@ -14,6 +14,7 @@
     <div v-else>
       <button @click="$router.push('/login')">Login with Google</button>
     </div>
+    
   </div>
 </template>
 
@@ -34,6 +35,11 @@ onMounted(async () => {
 </script>
 
 <style scoped>
+body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 .home-container {
   text-align: center;
   margin-top: 100px;

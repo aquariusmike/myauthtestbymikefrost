@@ -9,6 +9,11 @@ const callback = (response) => {
 
 <template>
   <router-view />
+  <footer>
+    <div style="text-align: center; padding: 20px; color: #888; display: block; position: fixed; bottom: 0; width: 100%; background: #f9f9f9;">
+      <p>2025 MyAuth Test. Made by Mike Frost</p>
+    </div>
+  </footer>
 </template>
 
 <style>

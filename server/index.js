@@ -64,7 +64,7 @@ app.get("/auth/google/callback",
     const domain = email.split("@")[1];
 
     const allowedDomains = ["stu.pathfinder-mm.org"];
-    const allowedSingleEmail = "avagarimike11@gmail.com";
+    const allowedSingleEmail = ["avagarimike11@gmail.com", "minnyi158@gmail.com"];
 
     const isVerified =
       allowedDomains.includes(domain) ||
