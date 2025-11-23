@@ -60,15 +60,16 @@ app.get("/auth/google",
 app.get("/auth/google/callback",
   passport.authenticate("google", { failureRedirect: `${process.env.FRONTEND_URL}/?error=not_verified` }),
   (req, res) => {
-    const email = req.user.emails[0].value;
-    const domain = email.split("@")[1];
+   const email = req.user.emails[0].value;
+const domain = email.split("@")[1];
 
-    const allowedDomains = ["stu.pathfinder-mm.org"];
-    const allowedSingleEmail = ["avagarimike11@gmail.com", "minnyi158@gmail.com"];
+const allowedDomains = ["stu.pathfinder-mm.org"];
+const allowedSingleEmail = ["avagarimike11@gmail.com", "minnyi158@gmail.com"];
 
-    const isVerified =
-      allowedDomains.includes(domain) ||
-      email === allowedSingleEmail;
+const isVerified =
+  allowedDomains.includes(domain) ||
+  allowedSingleEmail.includes(email);
+
 
     if (!isVerified) {
       req.logout(() => {
